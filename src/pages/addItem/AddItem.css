@@ -1,0 +1,27 @@
+.addItemHeader{
+    background-color: rgb(122, 0, 0);
+    color: rgb(255, 255, 255);
+    height: 10vh;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+}
+.addItemForm{
+    background-color: rgb(255, 255, 255);
+    height: 100vh;
+    padding: 10px;
+}
+.addItemField{
+    padding: 10px;
+    font-size: 3vh;
+}
+.addItemDisplay{
+    background-color: rgb(255, 235, 235);
+    color: rgb(122, 0, 0);
+    font-size: 1.5vw;
+    border-radius: 10px;
+    height: 8vh;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+}
