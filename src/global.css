@@ -22,6 +22,19 @@ html, body {
     border-radius: 10px;
     background-color: rgb(122, 0, 0);
 }
+.light-button{
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
+    height: 40px;
+    width:200px;
+    color: rgb(122, 0, 0);;
+    font-size: 3vh;
+    border: rgb(255,255,255);
+    border-radius: 10px;
+    background-color: rgb(255,255,255, 0, 0);
+}
 
 .input-box{
     height: 30px;
