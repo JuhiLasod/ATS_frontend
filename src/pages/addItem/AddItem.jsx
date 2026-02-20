@@ -45,10 +45,6 @@ function AddItem() {
         })
             .then((res) => res.json())
             .then((response) => {
-                console.log(response);
-                console.log(response.data.qty,
-                    response.data.price,
-                    response.data.gstPrice);
                 setAvlQty(response.data.qty);
                 setAvlPrice(response.data.price);
                 setAvlGstPrice(response.data.gstPrice);
@@ -70,6 +66,7 @@ function AddItem() {
 
     const handleCompChange = (e) => {
         setSelectedCompany(e.target.value);
+        if(e.target.value==="0") return;
         fetch("http://localhost:3015/api/getItem", {
             method: "POST",
             headers: {
@@ -128,7 +125,12 @@ function AddItem() {
 
     return (
         <div >
-            <div className="addItemHeader"><h1>Add Item</h1></div>
+            <div className="addItemHeader">
+                <h1>Add Item</h1>
+                <button className="light-button" onClick={()=>navigate("/")}>
+                    Go to Menu
+                </button>
+            </div>
             <div className="addItemForm">
                 <form onSubmit={handleSubmit}>
 
@@ -267,7 +269,7 @@ function AddItem() {
                     </div>
 
                     <button className="button" type="submit">Save</button>
-                    <button className="button" type="submit" onClick={()=>navigate("/")}>Cancel</button>
+                    <button className="button" onClick={()=>navigate("/")}>Cancel</button>
                 </form>
             </div>
         </div>
