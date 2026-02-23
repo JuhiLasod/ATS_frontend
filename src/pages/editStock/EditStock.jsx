@@ -3,9 +3,11 @@ import { FaEdit, FaSave } from "react-icons/fa";
 import { MdCheck } from "react-icons/md";
 import "./EditStock.css"
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
 
 function EditStock() {
-const navigate = useNavigate();
+    const navigate = useNavigate();
 
     const [items, setItems] = useState([]);
     const [editId, setEditId] = useState(null);
@@ -21,7 +23,10 @@ const navigate = useNavigate();
             .then((response) => {
                 setItems(response.data);
             })
-            .catch((err) => console.log(err));
+            .catch((err) => {
+                toast.error("Database error. ");
+                console.log(err)
+            });
     };
 
     useEffect(() => {
@@ -84,166 +89,170 @@ const navigate = useNavigate();
 
                 setItems(updatedItems);
                 setEditId(null);
+                toast.success("Item Updated Successfully. ");
             })
-            .catch((err) => console.log(err));
+            .catch((err) => {
+                toast.error("Bill Creation Failed. ");
+                console.log(err)
+            });
     };
 
     return (
         <div >
             <div className="editItemsHeader">
                 <h1>Stock Items</h1>
-                <button className="light-button" onClick={()=>navigate("/")}>
+                <button className="light-button" onClick={() => navigate("/")}>
                     Go to Menu
                 </button>
             </div>
-<div>
-            <table
-                border="1"
-                cellPadding="10"
-                style={{ borderCollapse: "collapse", width: "100%" ,tableLayout: "fixed"}}
-            >
-                <thead>
-                    <tr>
-                        <th>S.No</th>
-                        <th>Action</th>
-                        <th>Company</th>
-                        <th>Items</th>
-                        <th>Quantity</th>
-                        <th>Price</th>
-                        <th>GST Price</th>
-                    </tr>
-                </thead>
+            <div>
+                <table
+                    border="1"
+                    cellPadding="10"
+                    style={{ borderCollapse: "collapse", width: "100%", tableLayout: "fixed" }}
+                >
+                    <thead>
+                        <tr>
+                            <th>S.No</th>
+                            <th>Action</th>
+                            <th>Company</th>
+                            <th>Items</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>GST Price</th>
+                        </tr>
+                    </thead>
 
-                <tbody>
-                    {items.length > 0 ? (
-                        items.map((item, index) => (
-                            <tr key={item.id} style={{backgroundColor: editId === item.id ? "rgb(255, 236, 236)" : "white"}}>
-                                <td style={{ textAlign: "center" }}>{index + 1}</td>
+                    <tbody>
+                        {items.length > 0 ? (
+                            items.map((item, index) => (
+                                <tr key={item.id} style={{ backgroundColor: editId === item.id ? "rgb(255, 236, 236)" : "white" }}>
+                                    <td style={{ textAlign: "center" }}>{index + 1}</td>
 
-                                <td style={{ textAlign: "center" }}>
-                                    {editId === item.id ? (
-                                        <div
-                                            style={{ cursor: "pointer", color: "green", fontSize: "2vw"}}
-                                            onClick={handleSave}
-                                        >☑</div>
-                                    ) : (
-                                        <FaEdit
-                                            style={{ cursor: "pointer", color: "rgb(155, 30, 30)" }}
-                                            onClick={() => handleEdit(item)}
-                                        />
-                                    )}
-                                </td>
+                                    <td style={{ textAlign: "center" }}>
+                                        {editId === item.id ? (
+                                            <div
+                                                style={{ cursor: "pointer", color: "green", fontSize: "2vw" }}
+                                                onClick={handleSave}
+                                            >☑</div>
+                                        ) : (
+                                            <FaEdit
+                                                style={{ cursor: "pointer", color: "rgb(155, 30, 30)" }}
+                                                onClick={() => handleEdit(item)}
+                                            />
+                                        )}
+                                    </td>
 
-                                <td style={{ textAlign: "center" }}>
-                                    {editId === item.id ? (
-                                        <input
-                                            type="text"
-                                            name="compName"
-                                            value={editData.compName}
-                                            onChange={handleChange}
-                                            style={{
-                                                border: "none",
-                                                outline: "none",
-                                                background: "transparent",
-                                                textAlign: "center",
-                                                width: "100%"
-                                            }}
-                                        />
-                                    ) : (
-                                        item.company?.name
-                                    )}
-                                </td>
+                                    <td style={{ textAlign: "center" }}>
+                                        {editId === item.id ? (
+                                            <input
+                                                type="text"
+                                                name="compName"
+                                                value={editData.compName}
+                                                onChange={handleChange}
+                                                style={{
+                                                    border: "none",
+                                                    outline: "none",
+                                                    background: "transparent",
+                                                    textAlign: "center",
+                                                    width: "100%"
+                                                }}
+                                            />
+                                        ) : (
+                                            item.company?.name
+                                        )}
+                                    </td>
 
-                                <td style={{ textAlign: "center" }}>
-                                    {editId === item.id ? (
-                                        <input
-                                            type="text"
-                                            name="itemName"
-                                            value={editData.itemName}
-                                            onChange={handleChange}
-                                            style={{
-                                                border: "none",
-                                                outline: "none",
-                                                background: "transparent",
-                                                textAlign: "center",
-                                                width: "100%"
-                                            }}
-                                        />
-                                    ) : (
-                                        item.name
-                                    )}
-                                </td>
+                                    <td style={{ textAlign: "center" }}>
+                                        {editId === item.id ? (
+                                            <input
+                                                type="text"
+                                                name="itemName"
+                                                value={editData.itemName}
+                                                onChange={handleChange}
+                                                style={{
+                                                    border: "none",
+                                                    outline: "none",
+                                                    background: "transparent",
+                                                    textAlign: "center",
+                                                    width: "100%"
+                                                }}
+                                            />
+                                        ) : (
+                                            item.name
+                                        )}
+                                    </td>
 
-                                <td style={{ textAlign: "center" }}>
-                                    {editId === item.id ? (
-                                        <input
-                                            type="number"
-                                            name="qty"
-                                            value={editData.qty}
-                                            onChange={handleChange}
-                                            style={{
-                                                border: "none",
-                                                outline: "none",
-                                                background: "transparent",
-                                                textAlign: "center",
-                                                width: "100%"
-                                            }}
-                                        />
-                                    ) : (
-                                        item.qty
-                                    )}
-                                </td>
+                                    <td style={{ textAlign: "center" }}>
+                                        {editId === item.id ? (
+                                            <input
+                                                type="number"
+                                                name="qty"
+                                                value={editData.qty}
+                                                onChange={handleChange}
+                                                style={{
+                                                    border: "none",
+                                                    outline: "none",
+                                                    background: "transparent",
+                                                    textAlign: "center",
+                                                    width: "100%"
+                                                }}
+                                            />
+                                        ) : (
+                                            item.qty
+                                        )}
+                                    </td>
 
-                                <td style={{ textAlign: "center" }}>
-                                    {editId === item.id ? (
-                                        <input
-                                            type="number"
-                                            name="price"
-                                            value={editData.price}
-                                            onChange={handleChange}
-                                            style={{
-                                                border: "none",
-                                                outline: "none",
-                                                background: "transparent",
-                                                textAlign: "center",
-                                                width: "100%"
-                                            }}
-                                        />
-                                    ) : (
-                                        item.price
-                                    )}
-                                </td>
+                                    <td style={{ textAlign: "center" }}>
+                                        {editId === item.id ? (
+                                            <input
+                                                type="number"
+                                                name="price"
+                                                value={editData.price}
+                                                onChange={handleChange}
+                                                style={{
+                                                    border: "none",
+                                                    outline: "none",
+                                                    background: "transparent",
+                                                    textAlign: "center",
+                                                    width: "100%"
+                                                }}
+                                            />
+                                        ) : (
+                                            item.price
+                                        )}
+                                    </td>
 
-                                <td style={{ textAlign: "center" }}>
-                                    {editId === item.id ? (
-                                        <input
-                                            type="number"
-                                            name="gstPrice"
-                                            value={editData.gstPrice}
-                                            onChange={handleChange}
-                                            style={{
-                                                border: "none",
-                                                outline: "none",
-                                                background: "transparent",
-                                                textAlign: "center",
-                                                width: "100%"
-                                            }}
-                                        />
-                                    ) : (
-                                        item.gstPrice
-                                    )}
+                                    <td style={{ textAlign: "center" }}>
+                                        {editId === item.id ? (
+                                            <input
+                                                type="number"
+                                                name="gstPrice"
+                                                value={editData.gstPrice}
+                                                onChange={handleChange}
+                                                style={{
+                                                    border: "none",
+                                                    outline: "none",
+                                                    background: "transparent",
+                                                    textAlign: "center",
+                                                    width: "100%"
+                                                }}
+                                            />
+                                        ) : (
+                                            item.gstPrice
+                                        )}
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="7" style={{ textAlign: "center" }}>
+                                    No Data Found
                                 </td>
                             </tr>
-                        ))
-                    ) : (
-                        <tr>
-                            <td colSpan="7" style={{ textAlign: "center" }}>
-                                No Data Found
-                            </td>
-                        </tr>
-                    )}
-                </tbody>
-            </table>
+                        )}
+                    </tbody>
+                </table>
             </div>
         </div>
     );
