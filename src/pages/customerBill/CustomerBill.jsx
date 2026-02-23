@@ -10,6 +10,7 @@ function CustomerBill() {
     const [items, setItems] = useState([]);
     const [total, setTotal] = useState("");
     const [totalInWords, setTotalInWords] = useState("");
+    const [qr, setQr] = useState('');
 
     useEffect(() => {
         fetchBill()
@@ -49,6 +50,10 @@ function CustomerBill() {
                         toWords(calculatedTotal) + " Rupees Only"
                     ).toUpperCase()
                 );
+                console.log("oka",total)
+                fetch(`http://localhost:3015/api/generateqr/${calculatedTotal}`)
+      .then(res => res.json())
+      .then(data => setQr(data.qr));
 
                 // setTotalInWords(
                 //     toWords(calculatedTotal).replace(/^\w/, c => c.toUpperCase()) +
@@ -91,7 +96,7 @@ function CustomerBill() {
 
                 <table
                     style={{
-                        width: "95%",
+                        width: "100%",
                         borderCollapse: "collapse",
                         tableLayout: "fixed",
                         // border: "2px solid black",
@@ -298,7 +303,8 @@ function CustomerBill() {
                                                 padding: "6px",
                                                 textAlign: "right",
                                                 fontWeight: "bold",
-                                                fontSize: "25px"
+                                                fontSize: "25px",
+                                                color: "rgb(122, 0, 0)"
                                             }}>₹{total}</td>
                                         </tr>
 
@@ -311,7 +317,16 @@ function CustomerBill() {
                     </tbody>
                 </table>
             </div>
+            <div className="invoice-footer">
+                <div className="qr-div">{qr && <img className="qr-img" src={qr} alt="UPI QR Code" />}
+                <div style={{fontSize:"20px"}}>
+                    Pay using UPI
+                </div>
+                </div>
+            </div>
+                
         </div>
+
     )
 }
 export default CustomerBill;
