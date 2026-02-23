@@ -1,6 +1,14 @@
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import "./GenerateBill.css";
+import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import CustomerBill from "../customerBill/CustomerBill";
 
 function GenerateBill() {
+    const navigate = useNavigate();
+
     const [formData, setFormData] = useState({
         "customerName": "",
         "customerMobile": "",
@@ -41,6 +49,10 @@ function GenerateBill() {
         ]);
     };
 
+    const deleteRow = (indexToDelete) => {
+        setRows(rows.filter((_, index) => index !== indexToDelete));
+    };
+
     const getCompanies = async () => {
         fetch("http://localhost:3015/api/getCompany", {
             method: "POST",
@@ -54,7 +66,10 @@ function GenerateBill() {
                 console.log(response);
                 setCompanies(response.data);
             })
-            .catch((err) => console.log(err));
+            .catch((err) => {
+                toast.error("Database error. ");
+                console.log(err)
+            });
 
     };
 
@@ -90,7 +105,10 @@ function GenerateBill() {
                     )
                 );
             })
-            .catch((err) => console.log(err));
+            .catch((err) => {
+                toast.error("Database error. ");
+                console.log(err)
+            });
 
 
         setRows(updatedRows);
@@ -117,18 +135,18 @@ function GenerateBill() {
 
     const handleSubmit = () => {
         const payload = {
-            data:{
+            data: {
                 customerName,
                 customerLocation,
                 customerMobile,
                 items:
                     rows.map(({ items, companyId, ...rest }) => ({
-                    ...rest,
-                    itemId: Number(rest.itemId),   // optional type fix
-                    qty: Number(rest.qty),
-                    price: Number(rest.price)
+                        ...rest,
+                        itemId: Number(rest.itemId),   // optional type fix
+                        qty: Number(rest.qty),
+                        price: Number(rest.price)
                     }))
-                }   
+            }
         }
         console.log(payload);
         fetch("http://localhost:3015/api/generate-bill", {
@@ -141,110 +159,165 @@ function GenerateBill() {
             .then((res) => res.json())
             .then((response) => {
                 console.log(response);
+                toast.success("Bill Generated Successfully. ");
+                console.log("generated bill id is", response.data[0].billId);
+                const billId = response.data[0].billId
+                navigate(`/bill/${billId}`);
             })
-            .catch((err) => console.log(err));
+            .catch((err) => {
+                console.log(err)
+                toast.error("Bill Creation Failed. ");
+            })
     }
 
     return (
-        <div>
-            <div>
-                <label>Customer Name</label>
-                <input
-                    type="text"
-                    value={customerName}
-                    onChange={(e) => setCustomerName(e.target.value)}
-                />
-                <label>Customer Address</label>
-                <input
-                    type="text"
-                    value={customerLocation}
-                    onChange={(e) => setCustomerLocation(e.target.value)}
-                />
-                <label>Customer Mobile No.</label>
-                <input
-                    type="text"
-                    value={customerMobile}
-                    onChange={(e) => setCustomerMobile(e.target.value)}
-                />
+        <div >
+            <div className="billing-header">
+                <h1>
+                    Billing
+                </h1>
+                <button className="light-button" onClick={() => navigate("/")}>
+                    Go to Menu
+                </button>
             </div>
-            <table border="1" cellPadding="8">
-                <thead>
-                    <tr>
-                        <th>Company</th>
-                        <th>Item</th>
-                        <th>Qty</th>
-                        <th>Price</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    {rows.map((row, index) => (
-                        <tr key={index}>
-                            {/* Company Dropdown */}
-                            <td>
-                                <select
-                                    value={row.companyId}
-                                    onChange={(e) =>
-                                        handleCompanyChange(index, e.target.value)
-                                    }
-                                >
-                                    <option value="">Select Company</option>
-                                    {companies.map((comp) => (
-                                        <option key={comp.id} value={comp.id}>
-                                            {comp.name}
-                                        </option>
-                                    ))}
-                                </select>
-                            </td>
-
-                            {/* Item Dropdown */}
-                            <td>
-                                <select
-                                    value={row.itemId}
-                                    onChange={(e) =>
-                                        handleItemChange(index, e.target.value)
-                                    }
-                                >
-                                    <option value="">Select Item</option>
-                                    {row.items.map((item) => (
-                                        <option key={item.id} value={item.id}>
-                                            {item.name}
-                                        </option>
-                                    ))}
-                                </select>
-                            </td>
-
-                            {/* Qty */}
-                            <td>
-                                <input
-                                    type="number"
-                                    value={row.qty}
-                                    onChange={(e) =>
-                                        handleChange(index, "qty", e.target.value)
-                                    }
-                                />
-                            </td>
-
-                            {/* Price */}
-                            <td>
-                                <input
-                                    type="number"
-                                    value={row.price}
-                                    onChange={(e) =>
-                                        handleChange(index, "price", e.target.value)
-                                    }
-                                />
-                            </td>
+            <div className="billing-upper-div">
+                <div className="upper-form">
+                    <div className="billing-inner-div">
+                        <label className="field-name">Customer Name-</label>
+                        <input
+                            className="input-box"
+                            type="text"
+                            value={customerName}
+                            onChange={(e) => setCustomerName(e.target.value)}
+                        />
+                    </div>
+                    <div className="billing-inner-div">
+                        <label className="field-name">Customer Address-</label>
+                        <input
+                            className="input-box"
+                            type="text"
+                            value={customerLocation}
+                            onChange={(e) => setCustomerLocation(e.target.value)}
+                        />
+                    </div>
+                    <div className="billing-inner-div">
+                        <label className="field-name">Customer Mobile No.-</label>
+                        <input
+                            className="input-box"
+                            type="text"
+                            value={customerMobile}
+                            onChange={(e) => setCustomerMobile(e.target.value)}
+                        />
+                    </div>
+                </div>
+                <table
+                    className="billing-table"
+                    style={{ borderCollapse: "collapse", width: "100%", tableLayout: "fixed" }}>
+                    <colgroup>
+                        <col style={{ width: "4%" }} />
+                        <col style={{ width: "8%" }} />   {/* S.No */}
+                        <col style={{ width: "28%" }} />  {/* Company */}
+                        <col style={{ width: "28%" }} />  {/* Item */}
+                        <col style={{ width: "16%" }} />  {/* Qty */}
+                        <col style={{ width: "16%" }} />  {/* Price */}
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>S.No</th>
+                            <th>Company</th>
+                            <th>Item</th>
+                            <th>Qty</th>
+                            <th>Price</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
 
-            <br />
+                    <tbody>
+                        {rows.map((row, index) => (
+                            <tr key={index} style={{ textAlign: "center" }}>
+                                <td
+                                className="delete-cell"
+                                    onClick={() => deleteRow(index)}
+                                    style={{ cursor: "pointer" }}
+                                >
 
-            {/* Add Item Button */}
-            <button onClick={addRow}>+ Add Item</button>
-            <button onClick={handleSubmit}>generate</button>
+                                    <FontAwesomeIcon icon={faTrash} />
+
+                                </td>
+                                <td>
+                                    {index + 1}
+
+                                </td>
+
+
+                                {/* Company Dropdown */}
+                                <td>
+                                    <select
+                                        value={row.companyId}
+                                        onChange={(e) =>
+                                            handleCompanyChange(index, e.target.value)
+                                        }
+                                    >
+                                        <option value="">Select Company</option>
+                                        {companies.map((comp) => (
+                                            <option key={comp.id} value={comp.id}>
+                                                {comp.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </td>
+
+                                {/* Item Dropdown */}
+                                <td>
+                                    <select
+                                        value={row.itemId}
+                                        onChange={(e) =>
+                                            handleItemChange(index, e.target.value)
+                                        }
+                                    >
+                                        <option value="">Select Item</option>
+                                        {row.items.map((item) => (
+                                            <option key={item.id} value={item.id}>
+                                                {item.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </td>
+
+                                {/* Qty */}
+                                <td>
+                                    <input
+                                        type="number"
+                                        value={row.qty}
+                                        onChange={(e) =>
+                                            handleChange(index, "qty", e.target.value)
+                                        }
+                                    />
+                                </td>
+
+                                {/* Price */}
+                                <td>
+                                    <input
+                                        type="number"
+                                        value={row.price}
+                                        onChange={(e) =>
+                                            handleChange(index, "price", e.target.value)
+                                        }
+                                    />
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+
+                <br />
+
+                {/* Add Item Button */}
+                <div style={{display:"flex", justifyContent:"space-between"}}>
+                    <button className="button" onClick={addRow}>Add Item</button>
+                    <button className="button" onClick={handleSubmit}>Generate Bill</button>
+                </div>
+            </div>
         </div>
     )
 }

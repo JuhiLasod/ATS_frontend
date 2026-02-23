@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./AddItem.css"
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function AddItem() {
     const navigate = useNavigate();
@@ -33,7 +34,9 @@ function AddItem() {
                 console.log(response);
                 setCompanies(response.data);
             })
-            .catch((err) => console.log(err));
+            .catch((err) => {
+                toast.error("Database error. ");
+                console.log(err)});
     }
     const fetchItemDetails = () => {
         fetch("http://localhost:3015/api/getSpecificItem", {
@@ -52,7 +55,9 @@ function AddItem() {
                     avlPrice,
                     avlGstPrice);
             })
-            .catch((err) => console.log(err));
+            .catch((err) => {
+                toast.error("Database error. ");
+                console.log(err)});
     }
     useEffect(() => {
         fetchCompanies();
@@ -79,7 +84,9 @@ function AddItem() {
                 console.log(response);
                 setItems(response.data);
             })
-            .catch((err) => console.log(err));
+            .catch((err) => {
+                toast.error("Database error. ");
+                console.log(err)});
     }
     // Handle input change
     const handleChange = (e) => {
@@ -116,11 +123,12 @@ function AddItem() {
             .then((response) => {
                 console.log(response);
                 setItems(response.data);
+                toast.success("Item Added Successfully. ");
+                navigate("/");
             })
-            .catch((err) => console.log(err));
-
-
-
+            .catch((err) => {
+                toast.error("Bill Creation Failed. ");
+                console.log(err)});
     };
 
     return (
@@ -135,7 +143,7 @@ function AddItem() {
                 <form onSubmit={handleSubmit}>
 
                     {/* Company Dropdown */}
-                    <div className="addItemField">
+                    <div className="field-name">
                         <label>Company Name</label>
                         <br/>
                         <select
@@ -160,7 +168,7 @@ function AddItem() {
 
                     {selectedCompany === "0" && (
                         <>
-                            <label className="addItemField">New Company Name:</label>
+                            <label className="field-name">New Company Name:</label>
                             <input
                                 type="text"
                                 className="input-box"
@@ -173,7 +181,7 @@ function AddItem() {
                     </div>
 
                     {/* Item Name */}
-                    <div className="addItemField">
+                    <div className="field-name">
                         <label >Item Name</label>
                         <br/>
                         <select
@@ -199,7 +207,7 @@ function AddItem() {
                     {/* Show Input If Other Selected */}
                     {selectedItem === "0" && (
                         <>
-                            <label className="addItemField">New Item Name</label>
+                            <label className="field-name">New Item Name</label>
                             <input
                                 className="input-box"
                                 type="text"
@@ -217,7 +225,7 @@ function AddItem() {
                             Available Stock- {avlQty}
                         </div>
                     }
-                    <div className="addItemField">
+                    <div className="field-name">
                         <label>New Stock</label>
                         <br />
                         <input
@@ -236,7 +244,7 @@ function AddItem() {
                             Current Price- {avlPrice}
                         </div>
                     }
-                    <div className="addItemField">
+                    <div className="field-name">
                         <label>New Price</label>
                         <br />
                         <input
@@ -255,7 +263,7 @@ function AddItem() {
                             Current GST  Price- {avlGstPrice}
                         </div>
                     }
-                    <div className="addItemField">
+                    <div className="field-name">
                         <label>New GST Price</label>
                         <br />
                         <input

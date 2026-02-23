@@ -4,10 +4,13 @@ import AddItem from "../pages/addItem/AddItem";
 import Dashboard from "../pages/dashboard/Dashboard";
 import EditStock from "../pages/editStock/EditStock";
 import GenerateBill from "../pages/generateBill/GenerateBill";
+import CustomerBill from "../pages/customerBill/CustomerBill";
+
 
 const AppRoutes= () => {
   return (
     <Routes>
+      
       <Route
         path="/"
         element={
@@ -33,6 +36,7 @@ const AppRoutes= () => {
             <GenerateBill />
         }
       />
+      <Route path="/bill/:billId" element={<CustomerBill />} />
       
     </Routes>
   );
